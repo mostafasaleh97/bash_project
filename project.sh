@@ -2,6 +2,7 @@
 export LC_COLLATE=C
 shopt -s extglob 
 
+
 if [ -d [Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee] ]; then
     echo "Database folder aleardy exists"
 else
@@ -14,7 +15,13 @@ do
     case $choice in
     "Create Database" )
         read -p "Enter the name of database : " name
-        mkdir $name
+        if [[ "$name" != +([a-zA-Z]) ]]; then
+         echo "wrong format,name should be string "
+        elif [[ -d $name ]]; then
+              echo "Database folder aleardy exists"
+        else
+            mkdir ./$name
+        fi
 
     ;;
     "list Database" )
@@ -27,7 +34,7 @@ do
         read -p "Enter the name of database : "
     ;;
     *)
-        exit
+        echo "wrong choice"
     esac
 done
 
