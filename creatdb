@@ -1,0 +1,17 @@
+ #!/usr/bin/bash
+export LC_COLLATE=C
+shopt -s extglob 
+ 
+        foo="_"
+        read -p "Enter the name of database : " name
+        if [[ "$name" =~ \ |\' ]];then
+            name="${name/ /"$foo"}"
+        fi
+        
+        if [[ "$name" != +([a-z_A-Z]) ]]; then
+         echo "wrong format,name should be string "
+        elif [[ -d $name ]]; then
+              echo "Database folder aleardy exists"
+        else
+            mkdir ./$name
+        fi

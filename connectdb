@@ -1,0 +1,40 @@
+ #!/usr/bin/bash
+export LC_COLLATE=C
+shopt -s extglob 
+ 
+       read -p "Enter the name of database : " connect
+        if [[ "$connect" != +([a-z_A-Z]) ]]; then
+         echo "wrong format,database doesn't exist "
+        elif [[ -d $connect ]]; then
+          cd $connect          
+          select choice in "Creare Table" "List Tables" "Drop Table" "Insert in Table" "Select From Table" "Update Table"
+          do
+            case $choice in
+                "Creare Table" )
+                 bash createtable
+                ;;
+                "List Tables" )
+                    ls
+                ;;
+                "Drop Table" )
+                    read -p "Enter the name of table you want to drop: " drop
+                        if [[ "$drop" != +([a-z_A-Z]) ]]; then
+                        echo "wrong format,name should be string "
+                        elif [[ -f $drop ]]; then
+                        rm ${drop}
+                        else 
+                        echo "table doesn't exist"
+                        fi
+                ;;
+                "Insert in Table" )
+                ;;
+                "Insert in Table" )
+                ;;
+                "Update Table" )
+                ;;
+
+            esac
+          done
+          else 
+            echo "database doesn't exist"
+        fi

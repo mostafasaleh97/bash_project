@@ -1,0 +1,48 @@
+#!/usr/bin/bash
+export LC_COLLATE=C
+shopt -s extglob     
+       
+    read -p "Enter name of the table :" table
+    if [[ "$table" =~ \ |\' ]];then
+        table="${table/ /"$foo"}"
+    fi
+    if [[ "$table" != +([a-z_A-Z]) ]]; then
+    echo "wrong format,name should be string "
+    elif [[ -f $table ]]; then
+        echo "table aleardy exists"
+    else
+        touch ./$table
+    fi
+    read -p "Enter the number of fields:" field
+if [[ $field =~ [0-9] ]]; then
+    for x in $(seq 1 $field)
+    do
+        read -p "enter col name:" col
+        if [[ -z $col ]]; then
+        echo "it can't be null "
+        read -p "enter col name:" col
+        else
+            echo  -n $col" " >> $table
+        fi
+        read -p "Enter column type [str/int]:" datatype 
+        if [[ $datatype = int || $datatype = str ]]; then
+    
+            echo -n $datatype" " >> $table.type
+        else
+            if [[ $"datatype" != int || $datatype != str ]]; then
+                echo "invaild datatype"
+                read -p "Enter column type [str/int]:" datatype
+            fi
+        fi  
+        if [[ $x == 1 ]]; then
+            echo "primary_key  " >> $table.cons
+        fi
+        
+    echo "$col has been created"
+done
+
+    echo "$table has been created"
+else
+    echo "wrong value , input should be integer "
+fi 
+            
