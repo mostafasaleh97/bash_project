@@ -29,7 +29,7 @@ shopt -s extglob
                 "Insert in Table" )
                     bash insertable
                 ;;
-                "Insert in Table" )
+                "Select from  Table" )
                 ;;
                 "Update Table" )
                 ;;

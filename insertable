@@ -6,8 +6,10 @@ if [[ -f $tablename ]]; then
     nf=`awk '{if(NR==1){print  NF'}} $tablename`
     for i in $(seq 1 $nf)
     do
-        colname=`awk  '{if(NR==1){print $i}}' $tablename`   
-        coltype=`awk '{if(NR==1){print $i}}' $tablename.type` 
+
+        colname=`awk -v x=$i '{if(NR==1){print $x}}' $tablename`   
+        coltype=`awk -v x=$i '{if(NR==1){print $x}}' $tablename.type` 
+        oldvalue=`sed -n '2,$p' $tablename`
         echo "the table columns is : "$colname
         echo "the type of data in this column is: " $coltype
         while true
