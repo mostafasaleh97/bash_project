@@ -27,6 +27,7 @@ shopt -s extglob
                         fi
                 ;;
                 "Insert in Table" )
+                    bash insertable
                 ;;
                 "Insert in Table" )
                 ;;
