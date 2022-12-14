@@ -1,10 +1,13 @@
  #!/usr/bin/bash
 export LC_COLLATE=C
 shopt -s extglob 
- 
-       read -p "Enter the name of database : " connect
-        if [[ "$connect" != +([a-z_A-Z]) ]]; then
+       
+       read -p "Enter the name of database : " connect 
+        while true
+        do
+              if [[ "$connect" != +([a-z_A-Z]) ]]; then
          echo "wrong format,database doesn't exist "
+         read -p "Enter the name of database : " connect
         elif [[ -d $connect ]]; then
           cd $connect          
           select choice in "Creare Table" "List Tables" "Drop Table" "Insert in Table" "Select From Table" "Update Table"
@@ -29,7 +32,10 @@ shopt -s extglob
                 "Insert in Table" )
                     bash insertable
                 ;;
-                "Select from  Table" )
+                "Select From Table" )
+
+                    bash selecttable
+                    
                 ;;
                 "Update Table" )
                 ;;
@@ -38,4 +44,9 @@ shopt -s extglob
           done
           else 
             echo "database doesn't exist"
+            read -p "Enter the name of database : " connect
         fi
+        done 
+      
+       
+        

@@ -11,9 +11,7 @@ shopt -s extglob
     elif [[ -f $table ]]; then
         echo "table aleardy exists"
     else
-        touch ./$table
-    fi
-    read -p "Enter the number of fields:" field
+        read -p "Enter the number of fields:" field
 if [[ $field =~ [0-9] ]]; then
     for x in $(seq 1 $field)
     do
@@ -45,4 +43,6 @@ done
 else
     echo "wrong value , input should be integer "
 fi 
+    fi
+
             

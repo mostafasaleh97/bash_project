@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 export LC_COLLATE=C
-shopt -s extglob 
+shopt -s extgl
    read -p "Enter the name of database you want to drop: " input
          if [[ "$input" != +([a-z_A-Z]) ]]; then
          echo "wrong format,name should be string "
