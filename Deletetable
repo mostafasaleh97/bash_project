@@ -8,25 +8,32 @@ do
 if [[ -f $tablename ]];then
      
     
-    select choice  in "Select All" "Select Column" "Select by column"
+    select choice  in "Delete All" "Delete Column" "Delete by id"
     do
         case $choice in
-        "Select All" )
-            cat $tablename 
+        "Delete All" )
+            sed -i '2,$d' $tablename | tee $tablename 
         ;;
-        "Select Column" )
+        "Delete Column" )
             nf=`awk '{if(NR==1){print  NF'}} $tablename`
             for i in $(seq 1 $nf)
             do
                 
                 allcolumn=`awk  '{if(NR==1){print $i}}' $tablename`
-                singlecolumn=`awk -v x=$i '{if(NR==1){print $i}}' $tablename`
                 echo "the table columns are : "$allcolumn
                 read -p "Enter column name:" column
                 colname=`sed -n '1p' $tablename | grep -o $column `
                 colnum=`cat $tablename | awk -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
+                echo "$colnum"
                 if [[ $column  ==  $colname ]]; then
-                    cut -d " " -f $colnum $tablename
+                    awk -F : '
+                    {
+                    if(NR>1)
+                    {
+                        $$colnum="";
+                         print $0
+                    } 
+                    }' $tablename
                     break
                     
                 else
@@ -36,29 +43,19 @@ if [[ -f $tablename ]];then
             done
             
         ;;
-        "Select by column" )
+        "Delete by id" )
              nf=`awk '{if(NR==1){print  NF'}} $tablename`
             for i in $(seq 1 $nf)
             do
-                
-                allcolumn=`awk  '{if(NR==1){print $i}}' $tablename`
-                singlecolumn=`awk -v x=$i '{if(NR==1){print $i}}' $tablename`
-                echo "the table columns are : "$allcolumn
-                read -p "Enter column name:" column
-                
-                colname=`sed -n '1p' $tablename | grep -o $column `
-                colnum=`cat $tablename | awk -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
-                if [[ $column  ==  $colname ]]; then
-                    read -p "Enter the value you want: " world
-                    awk -v b="$world" '{line=" ";for (i=1;i<=NF;i++) {if($i == b){print $0} 
-                    else 
-                    print "not exist"
-                    break
-                     }}' $tablename
+                read -p "Enter id number:" num
+                oldvalue=`awk '{print $1}' $tablename | grep "$num"`
+                echo $oldvalue
+                if [[ $num = $oldvalue ]]; then
+                    sed -i "/^$num/d" $tablename 
                     break
                     
                 else
-                    echo "this column doesn't exist"
+                    echo "this id doesn't exist"
                     break
                 fi
             done

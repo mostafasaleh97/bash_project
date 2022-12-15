@@ -10,7 +10,7 @@ shopt -s extglob
          read -p "Enter the name of database : " connect
         elif [[ -d $connect ]]; then
           cd $connect          
-          select choice in "Creare Table" "List Tables" "Drop Table" "Insert in Table" "Select From Table" "Update Table"
+          select choice in "Creare Table" "List Tables" "Drop Table" "Insert in Table" "Select From Table" "Delete from table" "Update Table" 
           do
             case $choice in
                 "Creare Table" )
@@ -36,6 +36,9 @@ shopt -s extglob
 
                     bash selecttable
                     
+                ;;
+                "Delete from table" )
+                    bash Deletetable
                 ;;
                 "Update Table" )
                 ;;
