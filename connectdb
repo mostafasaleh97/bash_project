@@ -41,6 +41,7 @@ shopt -s extglob
                     bash Deletetable
                 ;;
                 "Update Table" )
+                    bash updatetable
                 ;;
 
             esac

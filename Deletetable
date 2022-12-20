@@ -30,7 +30,7 @@ if [[ -f $tablename ]];then
                     {
                     if(NR>1)
                     {
-                        $$colnum="";
+                        $1="";
                          print $0
                     } 
                     }' $tablename
@@ -49,7 +49,6 @@ if [[ -f $tablename ]];then
             do
                 read -p "Enter id number:" num
                 oldvalue=`awk '{print $1}' $tablename | grep "$num"`
-                echo $oldvalue
                 if [[ $num = $oldvalue ]]; then
                     sed -i "/^$num/d" $tablename 
                     break
