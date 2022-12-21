@@ -14,16 +14,16 @@ select choice in "Create Database" "list Database" "Drop Database" "Connect Data
 do
     case $choice in
     "Create Database" )
-    bash creatdb
+     bash creatdb
     ;;
     "list Database" )
         ls -F |grep /
     ;;
     "Drop Database" )
-     bash dropdb
+        bash dropdb
     ;;
     "Connect Database" )
-    bash connectdb
+        bash connectdb
     ;;
     *)
         echo "wrong choice"

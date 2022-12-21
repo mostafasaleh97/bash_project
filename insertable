@@ -3,28 +3,50 @@ export LC_COLLATE=C
 shopt -s extglob 
 read -p "Enter table name:" tablename
 if [[ -f $tablename ]]; then
-    nf=`awk '{if(NR==1){print  NF'}} $tablename`
+    nf=`awk -F : '{if(NR==1){print  NF'}} $tablename`
     for i in $(seq 1 $nf)
     do
 
-        colname=`awk -v x=$i '{if(NR==1){print $x}}' $tablename`   
-        coltype=`awk -v x=$i '{if(NR==1){print $x}}' $tablename.type` 
+        colname=`awk -F : -v x=$i '{if(NR==1){print $x}}' $tablename`   
+        coltype=`awk -F : -v x=$i '{if(NR==1){print $x}}' $tablename.type` 
         echo "the table columns is : "$colname
         echo "the type of data in this column is: " $coltype
         while true
         do
             read  -p "Enter your value: " value
-            oldvalue=`awk '{print $1}' $tablename | grep "$value"`
-                 
-                if [[ $coltype = "int" && "$value" = +([0-9]) || $coltype = "str" && $value = +([a-zA-Z]) ]]; then
+            oldvalue=`awk -F : '{print $1}' $tablename | grep "$value"`
+                if [[ -z $value ]]; then
+                    if [[ $i == 1 ]]; then 
+                        echo -ne "\nNull:" >> $tablename
+                        break
+                    else
+                        if [[ $i == $nf ]];then
+                            echo -n "Null" >> $tablename
+                            break
+                        else
+                             echo -n "Null:" >> $tablename
+                            break
+                        fi
+                    fi
+
+                elif [[ $coltype = "int" && "$value" = +([0-9]) || $coltype = "str" && $value = +([a-z A-Z]) ]]; then
+                    
                     if [[ $i == 1 && $value = $oldvalue ]]; then
                         echo "repeated value , value should be unique in this column"
                     elif [[ $i == 1 ]]; then 
-                        echo -ne "\n$value " >> $tablename
+                        echo -ne "\n$value:" >> $tablename
+                        echo "$value has added successfully "
                         break
                     else
-                        echo -n $value" " >> $tablename
-                        break
+                        if [[ $i == $nf ]];then
+                            echo -n $value >> $tablename
+                            echo "$value has added successfully "
+                            break
+                        else
+                             echo -n $value":" >> $tablename
+                            echo "$value has added successfully "
+                            break
+                        fi
                     fi
                 else
                     echo "invaild value"

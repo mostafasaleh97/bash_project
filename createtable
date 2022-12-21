@@ -7,7 +7,7 @@ shopt -s extglob
         table="${table/ /"$foo"}"
     fi
     if [[ "$table" != +([a-z_A-Z]) ]]; then
-    echo "wrong format,name should be string "
+         echo "wrong format,name should be string "
     elif [[ -f $table ]]; then
         echo "table aleardy exists"
     else
@@ -20,18 +20,27 @@ if [[ $field =~ [0-9] ]]; then
         echo "it can't be null "
         read -p "enter col name:" col
         else
-            echo  -n $col" " >> $table
-        fi
-        read -p "Enter column type [str/int]:" datatype 
-        if [[ $datatype = int || $datatype = str ]]; then
-    
-            echo -n $datatype" " >> $table.type
-        else
-            if [[ $"datatype" != int || $datatype != str ]]; then
-                echo "invaild datatype"
-                read -p "Enter column type [str/int]:" datatype
+            if [[ $x == $field ]]; then
+                echo  -n $col >> $table
+            else
+                echo  -n $col":" >> $table
             fi
-        fi  
+        fi
+        while true
+        do
+            read -p "Enter column type [str/int]:" datatype 
+            if [[ $datatype == "int" || $datatype == "str" ]]; then
+                if [[ $x == $field ]];then
+                    echo -n $datatype >> $table.type
+                else
+                    echo -n $datatype":" >> $table.type
+                fi
+                break   
+            else
+                    echo "invaild datatype"
+                    continue
+            fi
+        done      
         if [[ $x == 1 ]]; then
             echo "primary_key  " >> $table.cons
         fi

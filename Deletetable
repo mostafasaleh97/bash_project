@@ -12,25 +12,26 @@ if [[ -f $tablename ]];then
     do
         case $choice in
         "Delete All" )
-            sed -i '2,$d' $tablename | tee $tablename 
+            sed -i '2,$d' $tablename  
+            echo "data deleted successfully"
         ;;
         "Delete Column" )
-            nf=`awk '{if(NR==1){print  NF'}} $tablename`
+            nf=`awk -F : '{if(NR==1){print  NF'}} $tablename`
             for i in $(seq 1 $nf)
             do
                 
-                allcolumn=`awk  '{if(NR==1){print $i}}' $tablename`
+                allcolumn=`awk -F : '{if(NR==1){print $i}}' $tablename`
                 echo "the table columns are : "$allcolumn
                 read -p "Enter column name:" column
                 colname=`sed -n '1p' $tablename | grep -o $column `
-                colnum=`cat $tablename | awk -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
-                echo "$colnum"
+                colnum=`cat $tablename | awk -F : -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
+                echo $colnum
                 if [[ $column  ==  $colname ]]; then
                     awk -F : '
                     {
                     if(NR>1)
                     {
-                        $1="";
+                        ${$colnum}="";
                          print $0
                     } 
                     }' $tablename
@@ -44,13 +45,14 @@ if [[ -f $tablename ]];then
             
         ;;
         "Delete by id" )
-             nf=`awk '{if(NR==1){print  NF'}} $tablename`
+            nf=`awk -F : '{if(NR==1){print  NF'}} $tablename`
             for i in $(seq 1 $nf)
             do
                 read -p "Enter id number:" num
-                oldvalue=`awk '{print $1}' $tablename | grep "$num"`
+                oldvalue=`awk -F : '{print $1}' $tablename | grep "$num"`
                 if [[ $num = $oldvalue ]]; then
                     sed -i "/^$num/d" $tablename 
+                    echo "record deleted successfully"
                     break
                     
                 else

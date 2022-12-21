@@ -11,20 +11,21 @@ if [[ -f $tablename ]];then
     do
         case $choice in
         "update by id " )
-               nf=`awk '{if(NR==1){print  NF'}} $tablename`
+               nf=`awk -F : '{if(NR==1){print  NF'}} $tablename`
             for i in $(seq 1 $nf)
             do
                 read -p "Enter id number:" num
-                read -p "Enter column name with id=$num:" column
-                firstvalue=`awk '{print $1}' $tablename | grep "$num"`
-                colname=`sed -n '1p' $tablename | grep -o $column `
-                colnum=`cat $tablename | awk -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
-                changedvalue=`sed -n "/^$num/p" $tablename | cut -d " " -f$colnum `
-                echo "the old value is $changedvalue "
-                 read -p "Enter your update:" newvalue
+                firstvalue=`awk -F : '{print $1}' $tablename | grep "$num"`
                 if [[ $num == $firstvalue ]]; then
+                    read -p "Enter column name with id=$num:" column
+                    colname=`sed -n '1p' $tablename | grep -o $column `
+                    colnum=`cat $tablename | awk -F : -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
+                    changedvalue=`sed -n "/^$num/p" $tablename | cut -d ":" -f$colnum `
+                    echo "the old value is $changedvalue "
+                    read -p "Enter your update:" newvalue
                     if [[ $column  ==  $colname ]]; then
                         sed -i "/^$num/s/$changedvalue/$newvalue/" $tablename
+                        echo "table updated successfully"
                         break
                     else
                         echo "this column doesn't exist"
@@ -38,25 +39,26 @@ if [[ -f $tablename ]];then
             done
         ;;
         "update Column" )
-            nf=`awk '{if(NR==1){print  NF'}} $tablename`
+            nf=`awk -F : '{if(NR==1){print  NF'}} $tablename`
             for i in $(seq 1 $nf)
             do
                 
-                allcolumn=`awk  '{if(NR==1){print $i}}' $tablename`
+                allcolumn=`awk -F : '{if(NR==1){print $i}}' $tablename`
                 echo "the table columns are : "$allcolumn
                 read -p "Enter column name:" column
                 colname=`sed -n '1p' $tablename | grep -o $column `
-                colnum=`cat $tablename | awk -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
+                colnum=`cat $tablename | awk -F : -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
                 if [[ $column  ==  $colname ]]; then
                     echo "this is your data:"
-                    cut -d " " -f $colnum $tablename |sed -n '2,$p'
+                    cut -d ":" -f $colnum $tablename |sed -n '2,$p'
                     read -p "Enter the value you want to change:" oldvalue
-                    detectvalue=`cut -d " " -f $colnum $tablename | grep $oldvalue `
+                    detectvalue=`cut -d ":" -f $colnum $tablename | grep $oldvalue `
                     echo $detectvalue
 
                     if [[ $detectvalue == $oldvalue ]]; then
                         read -p "Enter your update:" updatedvalue
                          sed -i "s/$oldvalue/$updatedvalue/" $tablename
+                         echo "table updated successfully"
                          break
                     else
                         echo "this value does not exist"

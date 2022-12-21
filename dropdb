@@ -1,11 +1,13 @@
 #!/usr/bin/bash
 export LC_COLLATE=C
-shopt -s extgl
+shopt -s extglob
+
    read -p "Enter the name of database you want to drop: " input
-         if [[ "$input" != +([a-z_A-Z]) ]]; then
+        if [[ "$input" != +([a-z_A-Z]) ]]; then
          echo "wrong format,name should be string "
         elif [[ -d $input ]]; then
           rm -r ${input}
+          echo "$input deleted succseefully"
         else 
-        echo "database doesn't exist"
+          echo "database doesn't exist"
         fi

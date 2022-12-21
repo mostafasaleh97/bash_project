@@ -5,51 +5,62 @@ shopt -s extglob
        read -p "Enter the name of database : " connect 
         while true
         do
-              if [[ "$connect" != +([a-z_A-Z]) ]]; then
-         echo "wrong format,database doesn't exist "
-         read -p "Enter the name of database : " connect
-        elif [[ -d $connect ]]; then
-          cd $connect          
-          select choice in "Creare Table" "List Tables" "Drop Table" "Insert in Table" "Select From Table" "Delete from table" "Update Table" 
-          do
-            case $choice in
-                "Creare Table" )
-                 bash createtable
-                ;;
-                "List Tables" )
-                    ls
-                ;;
-                "Drop Table" )
-                    read -p "Enter the name of table you want to drop: " drop
-                        if [[ "$drop" != +([a-z_A-Z]) ]]; then
-                        echo "wrong format,name should be string "
-                        elif [[ -f $drop ]]; then
-                        rm ${drop}
-                        else 
-                        echo "table doesn't exist"
-                        fi
-                ;;
-                "Insert in Table" )
-                    bash insertable
-                ;;
-                "Select From Table" )
+            if [[ "$connect" != +([a-z_A-Z]) ]]; then
+                echo "wrong format,database doesn't exist "
+                read -p "Enter the name of database : " connect
+            elif [[ -d $connect ]]; then
+                cd $connect          
+            select choice in "Creare Table" "List Tables" "Drop Table" "Insert in Table" "Select From Table" "Delete from table" "Update Table" 
+            do
+                case $choice in
+                    "Creare Table" )
+                    bash createtable
+                    ;;
+                    "List Tables" )
+                        ls
+                    ;;
+                    "Drop Table" )
+                        read -p "Enter the name of table you want to drop: " drop
+                            if [[ "$drop" != +([a-z_A-Z]) ]]; then
+                            echo "wrong format,name should be string "
+                            elif [[ -f $drop ]]; then
+                                rm $drop
+                                rm $drop.type
+                                rm $drop.cons
+                                if [[ -f $drop ]]; then
+                                    echo "cannot delete table,try again"
+                                else
+                                    echo " $drop  deleted successfully"
+                                fi
+                            
+                            else 
+                            echo "table doesn't exist"
+                            fi
+                    ;;
+                    "Insert in Table" )
+                        bash insertable
+                    ;;
+                    "Select From Table" )
 
-                    bash selecttable
-                    
-                ;;
-                "Delete from table" )
-                    bash Deletetable
-                ;;
-                "Update Table" )
-                    bash updatetable
-                ;;
+                        bash selecttable
+                        
+                    ;;
+                    "Delete from table" )
+                        bash Deletetable
+                    ;;
+                    "Update Table" )
+                        bash updatetable
+                    ;;
+                    *)
+                        echo "wrong choice"
+                    ;;
 
-            esac
-          done
-          else 
-            echo "database doesn't exist"
-            read -p "Enter the name of database : " connect
-        fi
+                esac
+            done
+            else 
+                echo "database doesn't exist"
+                read -p "Enter the name of database : " connect
+            fi
         done 
       
        

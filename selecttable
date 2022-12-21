@@ -13,20 +13,21 @@ if [[ -f $tablename ]];then
         case $choice in
         "Select All" )
             cat $tablename 
+            echo -n ""
         ;;
         "Select Column" )
-            nf=`awk '{if(NR==1){print  NF'}} $tablename`
+            nf=`awk -F : '{if(NR==1){print  NF'}} $tablename`
             for i in $(seq 1 $nf)
             do
                 
-                allcolumn=`awk  '{if(NR==1){print $i}}' $tablename`
-                singlecolumn=`awk -v x=$i '{if(NR==1){print $i}}' $tablename`
+                allcolumn=`awk -F : '{if(NR==1){print $i}}' $tablename`
+                singlecolumn=`awk -F : -v x=$i '{if(NR==1){print $i}}' $tablename`
                 echo "the table columns are : "$allcolumn
                 read -p "Enter column name:" column
                 colname=`sed -n '1p' $tablename | grep -o $column `
-                colnum=`cat $tablename | awk -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
+                colnum=`cat $tablename | awk -F : -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
                 if [[ $column  ==  $colname ]]; then
-                    cut -d " " -f $colnum $tablename
+                    cut -d ":" -f $colnum $tablename
                     break
                     
                 else
@@ -37,24 +38,20 @@ if [[ -f $tablename ]];then
             
         ;;
         "Select by column" )
-             nf=`awk '{if(NR==1){print  NF'}} $tablename`
+             nf=`awk -F : '{if(NR==1){print  NF'}} $tablename`
             for i in $(seq 1 $nf)
             do
                 
-                allcolumn=`awk  '{if(NR==1){print $i}}' $tablename`
-                singlecolumn=`awk -v x=$i '{if(NR==1){print $i}}' $tablename`
+                allcolumn=`awk -F : '{if(NR==1){print $i}}' $tablename`
+                singlecolumn=`awk -F : -v x=$i '{if(NR==1){print $i}}' $tablename`
                 echo "the table columns are : "$allcolumn
                 read -p "Enter column name:" column
                 
                 colname=`sed -n '1p' $tablename | grep -o $column `
-                colnum=`cat $tablename | awk -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
+                colnum=`cat $tablename | awk -F : -v b="$column" '{for (i=1;i<=NF;i++) {if($i == b){print i} }}'`
                 if [[ $column  ==  $colname ]]; then
-                    read -p "Enter the value you want: " world
-                    awk -v b="$world" '{line=" ";for (i=1;i<=NF;i++) {if($i == b){print $0} 
-                    else 
-                    print "not exist"
-                    break
-                     }}' $tablename
+                    read -p "Enter the value you want: " word
+                    sed -n "/$word/p" $tablename
                     break
                     
                 else

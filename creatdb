@@ -14,4 +14,5 @@ shopt -s extglob
               echo "Database folder aleardy exists"
         else
             mkdir ./$name
+            echo "database created successfully"
         fi
